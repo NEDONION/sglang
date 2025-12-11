@@ -1,61 +1,141 @@
-你现在是一名资深 AI Infra / LLM Infra / 系统架构工程师，对以下内容有深度掌握：
-- SGLang 全部源码与系统架构（executor、runtime、KV cache、parallelism、IR、调度等）
-- vLLM、TensorRT-LLM、Ray Serve、DeepSpeed-Inference 等推理框架
-- CUDA、NCCL、分布式系统、内存管理、流水线并行、计算图优化
-- 大规模 LLM 推理系统的工程实现与面试标准
+### 优化后 SGLang 面试题生成提示词
+你现在是一名精通 SGLang 全量源码与工程实现的顶级 AI Infra/LLM Serving 架构师&面试官，需围绕 SGLang 核心模块生成**源码级深度面试题**，要求如下：
 
-============================================================
-任务目标
-============================================================
-请生成一套 **SGLang 源码级 + AI Infra 方向的面试题**，难度从中级到专家级，适用于 AI Infra / LLM Infra / Model Serving 岗位面试。
+#### 核心要求
+1. 题目分层：Level2（源码理解）、Level3（实现细节+调度/内存）、Level4（架构&性能优化）、Level5（对比+重构+演进），整体难度偏高；
+2. 答案必须包含：
+   - 高层解释：1-2 段说明模块在 SGLang 中的核心角色；
+   - 伪代码实现：核心逻辑需以代码块形式给出**精准伪代码**（覆盖调用链、数据结构、核心函数逻辑），伪代码需贴合 SGLang 实际源码逻辑，而非抽象概念；
+   - 控制流/数据流解析：步骤化拆解核心流程；
+   - 数据结构与内存布局：描述关键数据结构字段、内存设计及对性能的影响；
+   - 竞品对比：至少对比 vLLM + TensorRT-LLM/TGI 其一，聚焦 KV cache、调度、并行、内存管理等维度；
+   - 性能 trade-off：分析设计在延迟/吞吐/显存/复杂度的取舍，给出调优建议；
+   - 重构/演进：1-2 个合理的架构演进方向。
 
-面试题必须覆盖（但不限于）：
-1. SGLang 架构：Executor、Graph IR、Runtime、Tokenizer、KV Cache 管理
-2. SGLang 与 vLLM 的核心差异（block table、调度策略、prefill/decoding 流程）
-3. SGLang 的 ComputeGraph / IR 优化机制
-4. SGLang 的异步推理、并行执行模型
-5. SGLang 的 streaming token 推理原理
-6. SGLang 的 Operator 实现、CUDA Kernel、Memory Layout
-7. SGLang 的 compile-and-run 执行模型
-8. SGLang 在多 GPU / 分布式推理中的扩展方式
-9. AI Infra 必备底层：CUDA、NCCL、Pinned Memory、Zero-copy、RPC、调度策略等
+#### 覆盖模块
+1. 执行与调度层（Executor/Engine 抽象、请求调用链、Prefill/Decode/Streaming 执行路径）；
+2. 图与 IR 层（IR 设计、编译-执行流程、算子优化）；
+3. KV Cache/内存管理（数据结构、复用策略、显存分配）；
+4. 并行与扩展性（张量/流水线/数据并行落地、多卡扩展）；
+5. 系统工程细节（配置/监控/容错、API 协议对接）。
 
-============================================================
-输出格式
-============================================================
-请按如下格式输出：
+#### 输出格式
+```
+## Level X（层级名称）
+### 问题 X：[具体问题]
+- 标准答案：
+  1. 高层解释：[1-2 段核心作用说明]
+  2. 核心伪代码：
+  ```python（或C++，根据模块定）
+  # 注释说明伪代码对应的核心逻辑（如：SGLang 请求调度核心流程）
+  [精准贴合源码逻辑的伪代码，包含关键类/函数/流程]
+  ```
+  3. 控制流/数据流解析：[步骤化拆解，如 1. 请求入队 → 2. 调度器选路 → ...]
+  4. 数据结构与内存布局：[描述关键结构字段、内存分布及性能影响]
+  5. 与 vLLM/TensorRT-LLM 对比：[聚焦核心差异、优缺点、适用场景]
+  6. 性能 & 工程 trade-offs：[分析设计取舍，给出不同场景调优建议]
+  7. 重构/演进方向：[1-2 个具体可行的演进思路]
+```
 
-## Level 1（基础理解）
-- 问题 1：……
-- 问题 2：……
+#### 风格要求
+- 伪代码需精准还原 SGLang 源码核心逻辑，而非泛化框架逻辑；
+- 术语中英文穿插（如 KV cache、block table、张量并行），中文为主；
+- 语气精准、犀利，站在核心开发者视角，无冗余表述；
+- 题目数量至少 8-12 道，每道题伪代码需覆盖对应模块核心路径。
 
-## Level 2（源码走查）
-- 问题 3：……
-- 问题 4：……
+### 示例（按提示词生成的输出片段）
+```
+## Level 2（源码理解）
+### 问题 1：SGLang 中一次推理请求从进入到返回的完整调用链是怎样的？
+- 标准答案：
+  1. 高层解释：SGLang 中推理请求从 HTTP 层接入后，经请求解析、调度、引擎执行、KV Cache 读写、结果解码返回，核心依赖异步调度框架与引擎执行层的协同，是端到端推理的核心链路。
+  2. 核心伪代码：
+  ```python
+  # SGLang 端到端推理请求调用链核心伪代码
+  async def handle_http_request(request: HttpRequest):
+      # 1. 请求解析与参数校验
+      parsed_req = parse_openai_request(request)  # 兼容OpenAI API协议
+      req_id = generate_unique_req_id()
+      # 2. 令牌化处理
+      token_ids = TokenizerManager.get_instance().encode(parsed_req.prompt)
+      # 3. 构建内部请求对象
+      internal_req = InferenceRequest(
+          req_id=req_id,
+          prompt_tokens=token_ids,
+          max_new_tokens=parsed_req.max_new_tokens,
+          stream=parsed_req.stream
+      )
+      # 4. 提交至调度器
+      scheduler = Scheduler.get_instance()
+      result_queue = asyncio.Queue()
+      await scheduler.submit_request(internal_req, result_queue)
+      # 5. 引擎执行与结果消费
+      if internal_req.stream:
+          # 流式返回逻辑
+          async for token_chunk in result_queue:
+              decoded_text = DetokenizerManager.get_instance().decode(token_chunk)
+              yield f"data: {json.dumps({'choices': [{'delta': {'content': decoded_text}}]})}\n\n"
+      else:
+          # 非流式返回
+          full_tokens = await result_queue.get()
+          decoded_text = DetokenizerManager.get_instance().decode(full_tokens)
+          return HttpResponse(json.dumps({'choices': [{'message': {'content': decoded_text}}]}))
 
-## Level 3（系统设计 + 原理深入）
-- 问题 5：……
-- 问题 6：……
+  # 调度器提交请求至引擎的核心逻辑
+  class Scheduler:
+      _instance = None
 
-## Level 4（高级 AI Infra / 架构 + 源码细节）
-- 问题 7：……
-- 问题 8：……
+      @classmethod
+      def get_instance(cls):
+          if cls._instance is None:
+              cls._instance = cls()
+          return cls._instance
 
-## Level 5（专家级：面向架构与优化）
-- 问题 9：……
-- 问题 10：……
+      async def submit_request(self, req: InferenceRequest, result_queue: asyncio.Queue):
+          # 队列优先级排序
+          self.priority_queue.put(req, priority=req.priority)
+          # 唤醒空闲执行器
+          idle_worker = await self.idle_workers.get()
+          asyncio.create_task(idle_worker.execute(req, result_queue))
 
-============================================================
-附加要求
-============================================================
-1. 每个问题必须指向 SGLang 源码的具体部分（路径或模块）。
-2. 难度必须梯度式提升，从概念到架构再到源码级别。
-3. 最后请生成一套“标准答案”，包括：
-   - 原理解释
-   - 源码位置
-   - 与 vLLM 的关键差异
-   - 工程 trade-offs
-
-============================================================
-
-请立即生成问题与标准答案。
+  # 执行器执行推理的核心逻辑
+  class EngineWorker:
+      async def execute(self, req: InferenceRequest, result_queue: asyncio.Queue):
+          # Prefill阶段
+          prefill_output = await self.engine.prefill(
+              prompt_tokens=req.prompt_tokens,
+              kv_cache_manager=self.kv_cache_manager
+          )
+          await result_queue.put(prefill_output.new_tokens)
+          # Decode阶段（逐token生成）
+          for _ in range(req.max_new_tokens - 1):
+              decode_output = await self.engine.decode(
+                  last_token_id=prefill_output.last_token_id,
+                  kv_cache_manager=self.kv_cache_manager,
+                  req_id=req.req_id
+              )
+              await result_queue.put(decode_output.new_tokens)
+              prefill_output.last_token_id = decode_output.last_token_id
+  ```
+  3. 控制流/数据流解析：
+     1. HTTP 层接收请求 → 解析为 OpenAI 兼容格式 → 生成唯一请求 ID；
+     2. 分词器将 prompt 转为 token_ids → 构建内部 InferenceRequest 对象；
+     3. 调度器将请求放入优先级队列 → 唤醒空闲 EngineWorker；
+     4. Worker 执行 Prefill 阶段：处理完整 prompt，写入 KV Cache → 返回首批 token；
+     5. Worker 循环执行 Decode 阶段：基于上一 token + KV Cache 生成新 token → 流式/批量返回结果；
+     6. 解分词器将 token 转为文本 → 封装为 HTTP 响应返回。
+  4. 数据结构与内存布局：
+     - InferenceRequest 核心字段：req_id（字符串，唯一标识）、prompt_tokens（int 数组，存储输入 token）、max_new_tokens（int）、stream（bool）、priority（int，调度优先级）；
+     - 内存布局上，prompt_tokens 采用连续数组存储，减少内存碎片；req_id 复用字符串池，降低重复创建开销；
+     - 影响：连续数组加速 token 遍历，提升 Prefill 阶段计算效率；字符串池减少内存占用，但引入微小的哈希查找开销。
+  5. 与 vLLM/TensorRT-LLM 对比：
+     - 调度器：SGLang 采用优先级队列 + 空闲 Worker 唤醒机制，vLLM 采用 PagedAttention 驱动的 Continuous Batching，TensorRT-LLM 依赖 TensorRT 引擎的静态调度；
+     - 流式返回：SGLang 基于 asyncio.Queue 异步消费结果，vLLM 基于 Iterator 逐批返回，TensorRT-LLM 需手动拆分 stream 回调；
+     - 优缺点：SGLang 调度灵活性高，适配动态优先级场景，但吞吐略低于 vLLM；vLLM 吞吐最优，但优先级调度能力弱；TensorRT-LLM 延迟最低，但静态调度适配性差。
+  6. 性能 & 工程 trade-offs：
+     - 取舍：异步队列 + 协程模型降低线程切换开销，但引入协程调度的微小延迟；优先级队列提升高优请求响应速度，但增加调度器复杂度；
+     - 调优建议：低延迟场景 → 减小队列长度，提升 Worker 数量，关闭优先级排序；高 QPS 场景 → 开启 Continuous Batching 适配，增大队列容量，复用 KV Cache；资源受限场景 → 关闭流式返回，批量处理请求，降低内存占用。
+  7. 重构/演进方向：
+     - 引入 vLLM PagedAttention 与 SGLang 优先级调度的融合方案，兼顾吞吐与优先级；
+     - 将协程调度改为基于 io_uring 的异步模型，进一步降低系统调用开销。
+```
