@@ -1,84 +1,244 @@
 <div align="center" id="sglangtop">
 <img src="https://raw.githubusercontent.com/sgl-project/sglang/main/assets/logo.png" alt="logo" width="400" margin="10px"></img>
 
+# SGLang - 高性能大语言模型服务框架
+
 [![PyPI](https://img.shields.io/pypi/v/sglang)](https://pypi.org/project/sglang)
 ![PyPI - Downloads](https://static.pepy.tech/badge/sglang?period=month)
 [![license](https://img.shields.io/github/license/sgl-project/sglang.svg)](https://github.com/sgl-project/sglang/tree/main/LICENSE)
 [![issue resolution](https://img.shields.io/github/issues-closed-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
 [![open issues](https://img.shields.io/github/issues-raw/sgl-project/sglang)](https://github.com/sgl-project/sglang/issues)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sgl-project/sglang)
 
 </div>
 
 --------------------------------------------------------------------------------
 
-| [**Blog**](https://lmsys.org/blog/)
-| [**Documentation**](https://docs.sglang.io/)
-| [**Roadmap**](https://roadmap.sglang.io/)
-| [**Join Slack**](https://slack.sglang.io/)
-| [**Weekly Dev Meeting**](https://meet.sglang.io/)
-| [**Slides**](https://github.com/sgl-project/sgl-learning-materials?tab=readme-ov-file#slides) |
+| [**博客**](https://lmsys.org/blog/)
+| [**文档**](https://docs.sglang.io/)
+| [**路线图**](https://roadmap.sglang.io/)
+| [**加入Slack**](https://slack.sglang.io/)
+| [**每周开发者会议**](https://meet.sglang.io/)
+| [**幻灯片**](https://github.com/sgl-project/sgl-learning-materials?tab=readme-ov-file#slides) |
 
-## News
-- [2025/11] 🔥 SGLang Diffusion accelerates video and image generation ([blog](https://lmsys.org/blog/2025-11-07-sglang-diffusion/)).
-- [2025/10] 🔥 SGLang now runs natively on TPU with the SGLang-Jax backend ([blog](https://lmsys.org/blog/2025-10-29-sglang-jax/)).
-- [2025/10] PyTorch Conference 2025 SGLang Talk ([slide](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/sglang_pytorch_2025.pdf)).
-- [2025/09] 🔥 Deploying DeepSeek on GB200 NVL72 with PD and Large Scale EP (Part II): 3.8x Prefill, 4.8x Decode Throughput ([blog](https://lmsys.org/blog/2025-09-25-gb200-part-2/)).
-- [2025/09] SGLang Day 0 Support for DeepSeek-V3.2 with Sparse Attention ([blog](https://lmsys.org/blog/2025-09-29-deepseek-V32/)).
-- [2025/08] SGLang x AMD SF Meetup on 8/22: Hands-on GPU workshop, tech talks by AMD/xAI/SGLang, and networking ([Roadmap](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_sglang_roadmap.pdf), [Large-scale EP](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_sglang_ep.pdf), [Highlights](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_highlights.pdf), [AITER/MoRI](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_aiter_mori.pdf), [Wave](https://github.com/sgl-project/sgl-learning-materials/blob/main/slides/amd_meetup_wave.pdf)).
-- [2025/08] SGLang provides day-0 support for OpenAI gpt-oss model ([instructions](https://github.com/sgl-project/sglang/issues/8833))
-- [2025/05] Deploying DeepSeek with PD Disaggregation and Large-scale Expert Parallelism on 96 H100 GPUs ([blog](https://lmsys.org/blog/2025-05-05-large-scale-ep/)).
+## 项目简介
 
-<details>
-<summary>More</summary>
+SGLang (SGLang Runtime) 是一个高性能的大语言模型（LLM）和视觉语言模型（VLM）服务框架。该项目旨在为大规模生产环境提供低延迟、高吞吐量的推理服务，支持从单GPU到分布式集群的各种部署场景。
 
-- [2025/10] SGLang x Nvidia SF Meetup on 10/2 ([recap](https://x.com/lmsysorg/status/1975339501934510231)).
-- [2025/06] SGLang, the high-performance serving infrastructure powering trillions of tokens daily, has been awarded the third batch of the Open Source AI Grant by a16z ([a16z blog](https://a16z.com/advancing-open-source-ai-through-benchmarks-and-bold-experimentation/)).
-- [2025/06] Deploying DeepSeek on GB200 NVL72 with PD and Large Scale EP (Part I): 2.7x Higher Decoding Throughput ([blog](https://lmsys.org/blog/2025-06-16-gb200-part-1/)).
-- [2025/03] Supercharge DeepSeek-R1 Inference on AMD Instinct MI300X ([AMD blog](https://rocm.blogs.amd.com/artificial-intelligence/DeepSeekR1-Part2/README.html))
-- [2025/03] SGLang Joins PyTorch Ecosystem: Efficient LLM Serving Engine ([PyTorch blog](https://pytorch.org/blog/sglang-joins-pytorch/))
-- [2025/02] Unlock DeepSeek-R1 Inference Performance on AMD Instinct™ MI300X GPU ([AMD blog](https://rocm.blogs.amd.com/artificial-intelligence/DeepSeekR1_Perf/README.html))
-- [2025/01] SGLang provides day one support for DeepSeek V3/R1 models on NVIDIA and AMD GPUs with DeepSeek-specific optimizations. ([instructions](https://github.com/sgl-project/sglang/tree/main/benchmark/deepseek_v3), [AMD blog](https://www.amd.com/en/developer/resources/technical-articles/amd-instinct-gpus-power-deepseek-v3-revolutionizing-ai-development-with-sglang.html), [10+ other companies](https://x.com/lmsysorg/status/1887262321636221412))
-- [2024/12] v0.4 Release: Zero-Overhead Batch Scheduler, Cache-Aware Load Balancer, Faster Structured Outputs ([blog](https://lmsys.org/blog/2024-12-04-sglang-v0-4/)).
-- [2024/10] The First SGLang Online Meetup ([slides](https://github.com/sgl-project/sgl-learning-materials?tab=readme-ov-file#the-first-sglang-online-meetup)).
-- [2024/09] v0.3 Release: 7x Faster DeepSeek MLA, 1.5x Faster torch.compile, Multi-Image/Video LLaVA-OneVision ([blog](https://lmsys.org/blog/2024-09-04-sglang-v0-3/)).
-- [2024/07] v0.2 Release: Faster Llama3 Serving with SGLang Runtime (vs. TensorRT-LLM, vLLM) ([blog](https://lmsys.org/blog/2024-07-25-sglang-llama3/)).
-- [2024/02] SGLang enables **3x faster JSON decoding** with compressed finite state machine ([blog](https://lmsys.org/blog/2024-02-05-compressed-fsm/)).
-- [2024/01] SGLang provides up to **5x faster inference** with RadixAttention ([blog](https://lmsys.org/blog/2024-01-17-sglang/)).
-- [2024/01] SGLang powers the serving of the official **LLaVA v1.6** release demo ([usage](https://github.com/haotian-liu/LLaVA?tab=readme-ov-file#demo)).
+SGLang的核心设计目标是：
+- **高性能**: 通过先进优化技术实现业界领先的推理性能
+- **易用性**: 提供直观的前端语言接口，简化LLM应用开发
+- **可扩展性**: 支持多种硬件平台和模型架构
+- **生产就绪**: 工业级的稳定性和监控能力
 
-</details>
+## 功能说明
 
-## About
-SGLang is a high-performance serving framework for large language models and vision-language models.
-It is designed to deliver low-latency and high-throughput inference across a wide range of setups, from a single GPU to large distributed clusters.
-Its core features include:
+### 核心功能
+- **高速后端运行时**: 基于RadixAttention的前缀缓存、零开销CPU调度器、预填充-解码解耦、推测解码、连续批处理、分页注意力等
+- **张量/流水线/专家/数据并行**: 支持多种并行策略，适应不同规模模型
+- **结构化输出**: 支持JSON模式和有限状态机的快速结构化输出生成
+- **量化支持**: 支持FP4/FP8/INT4/AWQ/GPTQ等多种量化格式
+- **LoRA支持**: 高效的LoRA适配器加载和批处理
+- **多模态支持**: 支持图像、视频等多模态输入处理
 
-- **Fast Backend Runtime**: Provides efficient serving with RadixAttention for prefix caching, a zero-overhead CPU scheduler, prefill-decode disaggregation, speculative decoding, continuous batching, paged attention, tensor/pipeline/expert/data parallelism, structured outputs, chunked prefill, quantization (FP4/FP8/INT4/AWQ/GPTQ), and multi-LoRA batching.
-- **Extensive Model Support**: Supports a wide range of generative models (Llama, Qwen, DeepSeek, Kimi, GLM, GPT, Gemma, Mistral, etc.), embedding models (e5-mistral, gte, mcdse), reward models (Skywork), and diffusion models (WAN, Qwen-Image), with easy extensibility for integrating new models. Compatible with most Hugging Face models and OpenAI APIs.
-- **Extensive Hardware Support**: Runs on NVIDIA GPUs (GB200/B300/H100/A100/Spark), AMD GPUs (MI355/MI300), Intel Xeon CPUs, Google TPUs, Ascend NPUs, and more.
-- **Flexible Frontend Language**: Offers an intuitive interface for programming LLM applications, supporting chained generation calls, advanced prompting, control flow, multi-modal inputs, parallelism, and external interactions.
-- **Active Community**: SGLang is open-source and supported by a vibrant community with widespread industry adoption, powering over 400,000 GPUs worldwide.
+### 模型支持
+- **生成模型**: Llama、Qwen、DeepSeek、Kimi、GLM、GPT、Gemma、Mistral等主流模型
+- **嵌入模型**: e5-mistral、gte、mcdse等
+- **奖励模型**: Skywork等
+- **扩散模型**: WAN、Qwen-Image等
+- **MoE模型**: Mixtral、DeepSeek-MoE等
 
-## Getting Started
-- [Install SGLang](https://docs.sglang.io/get_started/install.html)
-- [Quick Start](https://docs.sglang.io/basic_usage/send_request.html)
-- [Backend Tutorial](https://docs.sglang.io/basic_usage/openai_api_completions.html)
-- [Frontend Tutorial](https://docs.sglang.io/references/frontend/frontend_tutorial.html)
-- [Contribution Guide](https://docs.sglang.io/developer_guide/contribution_guide.html)
+### 硬件支持
+- **NVIDIA GPU**: GB200/B300/H100/A100/Spark等
+- **AMD GPU**: MI355/MI300等
+- **Intel平台**: Xeon CPU、XPU等
+- **Google TPU**: TPU v4/v5等
+- **Ascend NPU**: 华为昇腾NPU
 
-## Benchmark and Performance
-Learn more in the release blogs: [v0.2 blog](https://lmsys.org/blog/2024-07-25-sglang-llama3/), [v0.3 blog](https://lmsys.org/blog/2024-09-04-sglang-v0-3/), [v0.4 blog](https://lmsys.org/blog/2024-12-04-sglang-v0-4/), [Large-scale expert parallelism](https://lmsys.org/blog/2025-05-05-large-scale-ep/), [GB200 rack-scale parallelism](https://lmsys.org/blog/2025-09-25-gb200-part-2/).
+## 技术栈
 
-## Adoption and Sponsorship
-SGLang has been deployed at large scale, generating trillions of tokens in production each day. It is trusted and adopted by a wide range of leading enterprises and institutions, including xAI, AMD, NVIDIA, Intel, LinkedIn, Cursor, Oracle Cloud, Google Cloud, Microsoft Azure, AWS, Atlas Cloud, Voltage Park, Nebius, DataCrunch, Novita, InnoMatrix, MIT, UCLA, the University of Washington, Stanford, UC Berkeley, Tsinghua University, Jam & Tea Studios, Baseten, and other major technology organizations across North America and Asia.
-As an open-source LLM inference engine, SGLang has become the de facto industry standard, with deployments running on over 400,000 GPUs worldwide.
-SGLang is currently hosted under the non-profit open-source organization [LMSYS](https://lmsys.org/about/).
+### 后端技术
+- **编程语言**: Python + PyTorch
+- **核心框架**: Transformers、FlashInfer
+- **网络通信**: FastAPI、aiohttp、gRPC
+- **并发处理**: asyncio、uvloop
+- **数据处理**: numpy、tiktoken、sentencepiece
 
-<img src="https://raw.githubusercontent.com/sgl-project/sgl-learning-materials/refs/heads/main/slides/adoption.png" alt="logo" width="800" margin="10px"></img>
+### 优化技术
+- **内存管理**: 分页注意力、前缀缓存、内存池
+- **计算优化**: CUDA图、Triton内核、量化
+- **批处理策略**: 连续批处理、动态批处理
+- **并行计算**: 张量并行、流水线并行、专家并行
 
-## Contact Us
-For enterprises interested in adopting or deploying SGLang at scale, including technical consulting, sponsorship opportunities, or partnership inquiries, please contact us at sglang@lmsys.org
+### 特性支持
+- **采样算法**: 贪心采样、Top-k、Top-p、温度采样
+- **约束生成**: 正则表达式约束、JSON模式
+- **模型服务**: 模型加载、卸载、切换
+- **监控指标**: 性能监控、资源使用统计
 
-## Acknowledgment
-We learned the design and reused code from the following projects: [Guidance](https://github.com/guidance-ai/guidance), [vLLM](https://github.com/vllm-project/vllm), [LightLLM](https://github.com/ModelTC/lightllm), [FlashInfer](https://github.com/flashinfer-ai/flashinfer), [Outlines](https://github.com/outlines-dev/outlines), and [LMQL](https://github.com/eth-sri/lmql).
+## 项目架构
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        前端语言层 (lang/)                       │
+├─────────────────────────────────────────────────────────────────┤
+│     API接口 │ 函数式编程 │ 控制流 │ 多模态支持 │ 工具调用        │
+├─────────────────────────────────────────────────────────────────┤
+│                       服务接口层 (entrypoints/)                 │
+├─────────────────────────────────────────────────────────────────┤
+│           HTTP API │ gRPC API │ OpenAI兼容接口                  │
+├─────────────────────────────────────────────────────────────────┤
+│                       核心调度层 (managers/)                    │
+├─────────────────────────────────────────────────────────────────┤
+│  请求调度 │ 批处理管理 │ 内存管理 │ 负载均衡 │ 资源监控         │
+├─────────────────────────────────────────────────────────────────┤
+│                     模型执行层 (model_executor/)                │
+├─────────────────────────────────────────────────────────────────┤
+│    模型推理 │ 张量计算 │ 优化内核 │ 分布式计算 │ 内存优化        │
+├─────────────────────────────────────────────────────────────────┤
+│                     硬件抽象层 (hardware_backend/)              │
+├─────────────────────────────────────────────────────────────────┤
+│     CUDA │ ROCm │ TPU │ CPU │ 量化优化 │ 自定义算子            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 核心组件说明
+
+1. **前端语言 (lang)**: 提供高级编程接口，支持函数式编程、控制流等特性
+2. **API服务器 (entrypoints)**: 提供HTTP/gRPC接口，兼容OpenAI API
+3. **调度器 (managers)**: 负责请求调度、批处理、内存管理
+4. **模型执行器 (model_executor)**: 执行模型推理计算
+5. **硬件后端 (hardware_backend)**: 抽象底层硬件差异
+
+## 目录说明
+
+```
+sglang/
+├── 3rdparty/              # 第三方依赖库
+├── assets/                # 静态资源文件
+├── benchmark/             # 基准测试代码
+├── docker/                # Docker容器配置
+├── docs/                  # 项目文档
+├── examples/              # 使用示例
+├── notes/                 # 项目笔记和说明
+├── python/                # Python源代码主目录
+│   ├── sglang/
+│   │   ├── cli/          # 命令行接口
+│   │   ├── eval/         # 评估工具
+│   │   ├── jit_kernel/   # JIT编译内核
+│   │   ├── lang/         # 前端语言接口
+│   │   ├── multimodal_gen/ # 多模态生成
+│   │   ├── srt/          # SGLang运行时核心
+│   │   │   ├── batch_invariant_ops/   # 批处理不变操作
+│   │   │   ├── entrypoints/           # 服务入口点
+│   │   │   ├── managers/              # 管理器组件
+│   │   │   ├── model_executor/        # 模型执行器
+│   │   │   ├── models/                # 模型实现
+│   │   │   ├── sampling/              # 采样算法
+│   │   │   └── ...                    # 其他组件
+│   │   ├── bench_*.py    # 基准测试脚本
+│   │   ├── launch_server.py # 服务器启动脚本
+│   │   └── ...           # 其他工具模块
+├── sgl-kernel/            # SGLang专用内核库
+├── sgl-model-gateway/     # 模型网关
+├── test/                  # 测试代码
+└── pyproject.toml         # 项目配置文件
+```
+
+## 核心逻辑讲解
+
+### 1. 前端语言设计
+SGLang提供了类似Python的高级编程接口，允许用户以函数式方式编写LLM应用：
+
+```python
+@function
+def multi_turn_chat(s):
+    s += system("You are a helpful assistant.")
+    s += user("What is the capital of France?")
+    s += assistant(gen(max_tokens=64))
+    s += user("What is its population?")
+    s += assistant(gen(max_tokens=64))
+```
+
+### 2. 请求处理流程
+```
+用户请求 → API服务器 → 分词器管理器 → 调度器 → 模型执行器 → 解分词器 → 响应返回
+```
+
+- **分词器管理器**: 负责将文本请求转换为token ID
+- **调度器**: 管理请求队列，进行批处理调度
+- **模型执行器**: 执行模型推理计算
+- **解分词器**: 将生成的token ID转换为文本
+
+### 3. 性能优化机制
+- **RadixAttention**: 通过前缀缓存避免重复计算
+- **连续批处理**: 动态批处理不同长度请求
+- **推测解码**: 使用小模型加速大模型推理
+- **分页注意力**: 高效管理长序列KV缓存
+
+### 4. 分布式支持
+- **张量并行**: 将模型权重切分到多个GPU
+- **流水线并行**: 将模型层切分到多个GPU
+- **专家并行**: 适用于MoE模型的专家分配
+
+## 快速启动
+
+### 环境准备
+确保系统安装了Python 3.10+和CUDA环境（用于GPU加速）。
+
+### 安装
+```bash
+# 安装SGLang
+pip install sglang
+
+# 或从源码安装
+git clone https://github.com/sgl-project/sglang.git
+cd sglang
+pip install -e .
+```
+
+### 启动服务器
+```bash
+# 启动SGLang服务器
+python -m sglang.launch_server --model-path meta-llama/Llama-2-7b-chat-hf --port 30000
+```
+
+### 客户端使用
+```python
+from sglang import function, gen, set_default_backend, Runtime
+
+# 设置后端
+runtime = Runtime(endpoint="http://localhost:30000")
+set_default_backend(runtime)
+
+# 定义生成函数
+@function
+def generate_text(s, prompt):
+    s += prompt
+    s += gen("response", max_tokens=128)
+
+# 执行生成
+result = generate_text.run(prompt="Hello, how are you?")
+print(result["response"])
+```
+
+## 扩展方向
+
+### 短期规划
+- 更多模型架构支持
+- 新硬件平台适配
+- 性能优化改进
+- 更丰富的API功能
+
+### 长期愿景
+- 更智能的自动优化
+- 更强的多模态能力
+- 更完善的生态工具
+- 企业级功能增强
+
+## 联系我们
+
+对于希望在大规模生产环境中采用或部署SGLang的企业，请联系我们：sglang@lmsys.org
+
+---
+
+SGLang项目是一个开放源码项目，欢迎社区贡献和反馈。如果您在使用过程中遇到问题或有改进建议，请在GitHub上提交Issue或Pull Request。
